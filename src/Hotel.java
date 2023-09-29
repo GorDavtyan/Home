@@ -31,10 +31,10 @@ public class Hotel implements Serializable {
      * @param scanner The scanner object to read user input.
      */
     public void addRoom(Scanner scanner) {
-
         int index;
         do {
             index = getIndex(scanner);
+            scanner.nextLine();
         } while (index < 0 || index > 3);
         if (index == 0) {
             return;
@@ -56,7 +56,6 @@ public class Hotel implements Serializable {
         } catch (InputMismatchException e) {
             index = -1;
         }
-        scanner.nextLine();
         return index;
     }
 
@@ -69,19 +68,7 @@ public class Hotel implements Serializable {
         String name = "";
         String email = "";
         Validation emailValidation = new Validation();
-//        System.out.println("Please enter the client name");
-//        name = scanner.nextLine();
-//        while (!emailValidation.validName(name)) {
-//            System.out.println("Please enter the valid name");
-//            name = scanner.nextLine();
-//        }
         name = inputCustomerName(scanner, emailValidation);
-//        System.out.println("Please enter the email for customer");
-//        email = scanner.nextLine();
-//        while (!emailValidation.validEmail(email)) {
-//            System.out.println("You entered an invalid email address, please enter the valid email");
-//            email = scanner.nextLine();
-//        }
         email = inputCustomerEmail(scanner, emailValidation);
         customerHistories.add(new CustomerHistory(new Customer(name, email)));
     }
@@ -110,10 +97,12 @@ public class Hotel implements Serializable {
     /**
      * Generate a report based on room number and save it to a file.
      *
-     * @param scanner The scanner object to read user input.
+     * @param scanner       The scanner object to read user input.
+     * @param dataOfReports The directory where reports are stored.
      */
     public void generateReport(Scanner scanner, String dataOfReports) {
         int roomNumber = inputRoomNumber(scanner);
+        scanner.nextLine();
         String context = report(roomNumber);
         System.out.print("Enter file name to save the report: ");
         String fileName = scanner.nextLine();
@@ -151,32 +140,29 @@ public class Hotel implements Serializable {
     private StartAndEndDate inputDate(Scanner scanner) {
         LocalDate startDate;
         LocalDate endDate;
-        StartAndEndDate reserveDuration = null;
         while (true) {
 
             try {
                 System.out.print("Enter start date (YYYY-MM-dd): ");
                 String startDateStr = scanner.nextLine();
-                validDate(scanner, startDateStr);
+                validDate(startDateStr);
                 startDate = LocalDate.parse(startDateStr);
                 System.out.print("Enter end date (YYYY-MM-dd): ");
                 String endDateStr = scanner.nextLine();
-                validDate(scanner, endDateStr);
+                validDate(endDateStr);
                 endDate = LocalDate.parse(endDateStr);
-//                break;
-           /* } catch (DateTimeException e) {
-                System.out.println(e.getMessage());
-            }*/
-//        }
-
-
-//        while (true) {
-//            try {
-                reserveDuration = StartAndEndDate.createDate(startDate, endDate);
                 break;
             } catch (DateTimeException e) {
                 System.out.println(e.getMessage());
             }
+        }
+
+
+        StartAndEndDate reserveDuration = null;
+        try {
+            reserveDuration = StartAndEndDate.createDate(startDate, endDate);
+        } catch (DateTimeException e) {
+            System.out.println(e.getMessage());
         }
         return reserveDuration;
     }
@@ -195,6 +181,7 @@ public class Hotel implements Serializable {
 
 
         RoomType typeRoom = inputRoomType(scanner);
+        scanner.nextLine();
         if (typeRoom == null) {
             System.out.println("We don't have such a room");
             return;
@@ -218,10 +205,9 @@ public class Hotel implements Serializable {
     /**
      * Validate the date format entered by the user.
      *
-     * @param scanner The scanner object to read user input.
-     * @param date    The date string entered by the user.
+     * @param date The date string entered by the user.
      */
-    public void validDate(Scanner scanner, String date) throws DateTimeException{
+    public void validDate(String date) throws DateTimeException {
         boolean test = validDateFormat(date);
         if (!test) {
             throw new DateTimeException("Invalid statement, please enter the valid date");
@@ -276,14 +262,13 @@ public class Hotel implements Serializable {
 
         RoomHistory roomHistory1 = roomHistory.get();
         roomHistory1.addBookHistory(startEndDateTime);
-//        if (foundedCustomer.get().addBookHistory(roomHistory1.getRoom(), startEndDateTime)) {
-//            roomHistorys.forEach(x -> {
-//                if (x.getRoom().equals(roomHistory1.getRoom())) {
-//                    x.addPeriod(startEndDateTime);
-//                }
-//            });
-//        }
-        foundedCustomer.get().addBookHistory(roomHistory1.getRoom(), startEndDateTime);
+        if (foundedCustomer.get().addBookHistory(roomHistory1.getRoom(), startEndDateTime)) {
+            roomHistorys.forEach(x -> {
+                if (x.getRoom().equals(roomHistory1.getRoom())) {
+                    x.addPeriod(startEndDateTime);
+                }
+            });
+        }
         System.out.println(generateBill(foundedCustomer.get(), roomHistory1, startEndDateTime));
         return true;
     }
@@ -370,7 +355,6 @@ public class Hotel implements Serializable {
      * @param filePath The path to the file from which the object will be deserialized.
      * @return The deserialized `Hotel` object or null if deserialization fails.
      */
-// Static method to deserialize Hotel object from a file
     public static Hotel deserializeHotel(String filePath) {
         try (FileInputStream fileIn = new FileInputStream(filePath);
              ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {

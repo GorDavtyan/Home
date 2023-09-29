@@ -4,6 +4,11 @@ import java.io.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * The `HotelMain` class serves as the entry point for a simple hotel management system.
+ * It allows users to add rooms, customers, book rooms, generate reports, and save/retrieve
+ * hotel information via serialization.
+ */
 public class HotelMain {
     private Hotel hotel;
     private static final  String allPathForInfo = "allPathForInfo.txt";
@@ -11,6 +16,9 @@ public class HotelMain {
     private static final String dataOfReports = "src/dataOfReports/";
 
 
+    /**
+     * Runs the hotel management system and provides a menu for user interaction.
+     */
     public void run() {
 
         String filePath = selectInfoFilePath();
@@ -48,6 +56,12 @@ public class HotelMain {
         } while (!choice.equals("0"));
     }
 
+    /**
+     * Exits the hotel management system, allows the user to save information to a file,
+     * and stores the selected file path for future use.
+     *
+     * @param scanner The scanner object for user input.
+     */
     public void exit(Scanner scanner) {
 
         int index;
@@ -77,6 +91,11 @@ public class HotelMain {
         }
     }
 
+    /**
+     * Selects the file path for retrieving saved information or returns null if no path is found.
+     *
+     * @return The file path for saved information or null if not found.
+     */
     public String selectInfoFilePath() {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(allPathForInfo))){
             return fileReader.readLine();

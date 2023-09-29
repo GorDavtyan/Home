@@ -1,1 +1,1 @@
-src/dataOfSerialization/ser.txt
+src/dataOfSerialization/hotel.txt
