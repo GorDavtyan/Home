@@ -104,6 +104,10 @@ public class Hotel implements Serializable {
         int roomNumber = inputRoomNumber(scanner);
         scanner.nextLine();
         String context = report(roomNumber);
+        if (context == null) {
+            System.out.println("There is no room for that number");
+            return;
+        }
         System.out.print("Enter file name to save the report: ");
         String fileName = scanner.nextLine();
         fileName = dataOfReports + fileName + ".txt";
@@ -322,7 +326,7 @@ public class Hotel implements Serializable {
     }
 
     private String report(int roomNumber) {
-        String context = " ";
+        String context = null;
         for (CustomerHistory customerHistory : customerHistories) {
             for (Room room : customerHistory.getSetMap().keySet()) {
                 if (room.getRoomID() == roomNumber) {
