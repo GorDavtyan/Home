@@ -46,7 +46,7 @@ public class RoomHistory implements Serializable {
         boolean test2 = st1.isBefore(st2) && end1.isAfter(st2);
         boolean test3 = st1.isAfter(st2) && st1.isBefore(end2);
 
-        return !(test1 || test2 || test3);
+        return (test1 || test2 || test3);
     }
 
     /**
@@ -57,18 +57,16 @@ public class RoomHistory implements Serializable {
      */
     public boolean isOpenBook(StartAndEndDate st) {
         if (startAndEndDates.isEmpty()) {
-            if (st.getStartDate().isBefore(st.getEndDate())) {
-                return true;
-            }
+           return true;
         }
         for (StartAndEndDate startAndEndDate : startAndEndDates) {
             if (checkDate(st, startAndEndDate)) {
-                return true;
-            } else {
                 return false;
-            }
+            } /*else {
+                return false;
+            }*/
         }
-        return false;
+        return true;
     }
 
     /**

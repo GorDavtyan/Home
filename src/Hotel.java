@@ -330,7 +330,7 @@ public class Hotel implements Serializable {
         for (CustomerHistory customerHistory : customerHistories) {
             for (Room room : customerHistory.getSetMap().keySet()) {
                 if (room.getRoomID() == roomNumber) {
-                    context = "Customer Name: " + customerHistory.getCustomer().getName() + " " + "Room number :" + roomNumber + "\n" + customerHistory.getSetMap().get(room).toString() + "\n";
+                    context = "Customer Name: " + customerHistory.getCustomer().getName() + " " + "Room number: " + roomNumber + "\n" + customerHistory.getSetMap().get(room).toString() + "\n";
                 }
             }
         }

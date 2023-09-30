@@ -44,10 +44,10 @@ public class StartAndEndDate implements Serializable {
      * @throws DateTimeException if the input dates are not valid (before the current date).
      */
     static public StartAndEndDate createDate(LocalDate startDate, LocalDate endDate) throws DateTimeException {
-        if (validDate(startDate) && validDate(endDate)) {
+        if (validDate(startDate) && validDate(endDate) && startDate.isBefore(endDate)) {
             return new StartAndEndDate(startDate, endDate);
         } else {
-            throw new DateTimeException("Input date time Before Local Date Time now");
+            throw new DateTimeException("The date is incorrect");
         }
     }
 
